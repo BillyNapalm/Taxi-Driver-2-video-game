@@ -1,0 +1,541 @@
+import pygame
+import sys
+
+# Initialize Pygame
+pygame.init()
+
+# Constants
+WIDTH, HEIGHT = 800, 600
+FPS = 60
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+PLAYER_SPEED = 5
+MISSION_COMPLETE = False
+
+# Screen setup
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Taxi Driver 2")
+
+# Load assets
+def load_sprite_sheet(filename, sprite_width, sprite_height):
+    sprite_sheet = pygame.image.load(filename).convert_alpha()
+    sprites = []
+    sheet_width, sheet_height = sprite_sheet.get_size()
+    for y in range(0, sheet_height, sprite_height):
+        for x in range(0, sheet_width, sprite_width):
+            sprite = sprite_sheet.subsurface(pygame.Rect(x, y, sprite_width, sprite_height))
+            sprites.append(sprite)
+    return sprites
+
+# Load sprites and backgrounds
+player_sprites = load_sprite_sheet('travis_spritesheet.png', 50, 50)
+enemy_sprites = load_sprite_sheet('enemy_spritesheet.png', 50, 50)
+backgrounds = {
+    'mission_1': pygame.image.load('mission_1_background.png').convert_alpha(),
+    'mission_2': pygame.image.load('mission_2_background.png').convert_alpha(),
+    'mission_3': pygame.image.load('mission_3_background.png').convert_alpha(),
+    'mission_4': pygame.image.load('mission_4_background.png').convert_alpha(),
+    'mission_5': pygame.image.load('mission_5_background.png').convert_alpha(),
+    'mission_6': pygame.image.load('mission_6_background.png').convert_alpha(),
+    'mission_7': pygame.image.load('mission_7_background.png').convert_alpha(),
+    'mission_8': pygame.image.load('mission_8_background.png').convert_alpha(),
+    'mission_9': pygame.image.load('mission_9_background.png').convert_alpha(),
+    'final': pygame.image.load('final_battle.png').convert_alpha(),
+    'ending': pygame.image.load('ending_background.png').convert_alpha(),
+    'happy': pygame.image.load('happy_background.png').convert_alpha()
+}
+
+font = pygame.font.Font(None, 74)
+
+def display_text(text, font, color, y_offset=0):
+    rendered_text = font.render(text, True, color)
+    screen.blit(rendered_text, (WIDTH // 2 - rendered_text.get_width() // 2, HEIGHT // 2 - rendered_text.get_height() // 2 + y_offset))
+
+def mission_intro(mission_number):
+    screen.fill(BLACK)
+    display_text(f"Mission {mission_number}", font, WHITE, -50)
+    pygame.display.flip()
+    pygame.time.wait(2000)
+
+def mission_complete_screen():
+    screen.fill(BLACK)
+    display_text("Mission Complete", font, WHITE, -50)
+    display_text("You have completed the mission.", font, WHITE, 50)
+    pygame.display.flip()
+    pygame.time.wait(2000)
+
+def secret_ending_choice():
+    global MISSION_COMPLETE
+    screen.fill(BLACK)
+    display_text("Choose Travis's Resolution", font, WHITE, -50)
+    display_text("1. Back on the road with the scum gone", font, WHITE, 0)
+    display_text("2. Giving into the demons", font, WHITE, 50)
+    pygame.display.flip()
+    choice_made = False
+    while not choice_made:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_1:
+                    secret_ending_2_screen()
+                    choice_made = True
+                elif event.key == pygame.K_2:
+                    secret_ending_1_screen()
+                    choice_made = True
+
+def mission_1():
+    screen.blit(backgrounds['mission_1'], (0, 0))
+    # Implement detailed mission 1 gameplay
+    player_rect = pygame.Rect(WIDTH // 2, HEIGHT - 60, 50, 50)
+    enemy_rect = pygame.Rect(WIDTH // 2 - 100, HEIGHT - 60, 50, 50)
+    clock = pygame.time.Clock()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            player_rect.x -= PLAYER_SPEED
+        if keys[pygame.K_RIGHT]:
+            player_rect.x += PLAYER_SPEED
+        if keys[pygame.K_UP]:
+            player_rect.y -= PLAYER_SPEED
+        if keys[pygame.K_DOWN]:
+            player_rect.y += PLAYER_SPEED
+
+        # Check for collision
+        if player_rect.colliderect(enemy_rect):
+            # Enemy defeated, proceed to mission complete
+            break
+
+        screen.blit(backgrounds['mission_1'], (0, 0))
+        screen.blit(player_sprites[0], player_rect)
+        screen.blit(enemy_sprites[0], enemy_rect)
+        pygame.display.flip()
+        clock.tick(FPS)
+
+    mission_complete_screen()
+
+def mission_2():
+    screen.blit(backgrounds['mission_2'], (0, 0))
+    # Implement detailed mission 2 gameplay
+    # For example, add code for a chase scene
+    player_rect = pygame.Rect(WIDTH // 2, HEIGHT - 60, 50, 50)
+    enemy_rect = pygame.Rect(WIDTH // 2 - 100, HEIGHT - 60, 50, 50)
+    clock = pygame.time.Clock()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            player_rect.x -= PLAYER_SPEED
+        if keys[pygame.K_RIGHT]:
+            player_rect.x += PLAYER_SPEED
+        if keys[pygame.K_UP]:
+            player_rect.y -= PLAYER_SPEED
+        if keys[pygame.K_DOWN]:
+            player_rect.y += PLAYER_SPEED
+
+        # Check if player reaches end of level
+        if player_rect.x > WIDTH - 50:
+            # Mission complete
+            break
+
+        screen.blit(backgrounds['mission_2'], (0, 0))
+        screen.blit(player_sprites[1], player_rect)
+        screen.blit(enemy_sprites[1], enemy_rect)
+        pygame.display.flip()
+        clock.tick(FPS)
+
+    mission_complete_screen()
+
+def mission_3():
+    screen.blit(backgrounds['mission_3'], (0, 0))
+    # Implement detailed mission 3 gameplay
+    # For example, add code for investigating a location
+    player_rect = pygame.Rect(WIDTH // 2, HEIGHT - 60, 50, 50)
+    enemy_rect = pygame.Rect(WIDTH // 2 - 100, HEIGHT - 60, 50, 50)
+    clock = pygame.time.Clock()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            player_rect.x -= PLAYER_SPEED
+        if keys[pygame.K_RIGHT]:
+            player_rect.x += PLAYER_SPEED
+        if keys[pygame.K_UP]:
+            player_rect.y -= PLAYER_SPEED
+        if keys[pygame.K_DOWN]:
+            player_rect.y += PLAYER_SPEED
+
+        # Check if player collects evidence or completes objective
+        if player_rect.colliderect(enemy_rect):
+            # Objective met, proceed to mission complete
+            break
+
+        screen.blit(backgrounds['mission_3'], (0, 0))
+        screen.blit(player_sprites[2], player_rect)
+        screen.blit(enemy_sprites[2], enemy_rect)
+        pygame.display.flip()
+        clock.tick(FPS)
+
+    mission_complete_screen()
+
+def mission_4():
+    screen.blit(backgrounds['mission_4'], (0, 0))
+    # Implement detailed mission 4 gameplay
+    # For example, add code for a confrontation at a junkyard
+    player_rect = pygame.Rect(WIDTH // 2, HEIGHT - 60, 50, 50)
+    enemy_rect = pygame.Rect(WIDTH // 2 - 100, HEIGHT - 60, 50, 50)
+    clock = pygame.time.Clock()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            player_rect.x -= PLAYER_SPEED
+        if keys[pygame.K_RIGHT]:
+            player_rect.x += PLAYER_SPEED
+        if keys[pygame.K_UP]:
+            player_rect.y -= PLAYER_SPEED
+        if keys[pygame.K_DOWN]:
+            player_rect.y += PLAYER_SPEED
+
+        # Check for a successful confrontation or enemy defeat
+        if player_rect.colliderect(enemy_rect):
+            # Mission complete
+            break
+
+        screen.blit(backgrounds['mission_4'], (0, 0))
+        screen.blit(player_sprites[3], player_rect)
+        screen.blit(enemy_sprites[3], enemy_rect)
+        pygame.display.flip()
+        clock.tick(FPS)
+
+    mission_complete_screen()
+
+def mission_5():
+    screen.blit(backgrounds['mission_5'], (0, 0))
+    # Implement detailed mission 5 gameplay
+    # For example, add code for a shootout at a nightclub
+    player_rect = pygame.Rect(WIDTH // 2, HEIGHT - 60, 50, 50)
+    enemy_rect = pygame.Rect(WIDTH // 2 - 100, HEIGHT - 60, 50, 50)
+    clock = pygame.time.Clock()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            player_rect.x -= PLAYER_SPEED
+        if keys[pygame.K_RIGHT]:
+            player_rect.x += PLAYER_SPEED
+        if keys[pygame.K_UP]:
+            player_rect.y -= PLAYER_SPEED
+        if keys[pygame.K_DOWN]:
+            player_rect.y += PLAYER_SPEED
+
+        # Check for successful shootout or enemy defeat
+        if player_rect.colliderect(enemy_rect):
+            # Mission complete
+            break
+
+        screen.blit(backgrounds['mission_5'], (0, 0))
+        screen.blit(player_sprites[4], player_rect)
+        screen.blit(enemy_sprites[4], enemy_rect)
+        pygame.display.flip()
+        clock.tick(FPS)
+
+    mission_complete_screen()
+
+def mission_6():
+    screen.blit(backgrounds['mission_6'], (0, 0))
+    # Implement detailed mission 6 gameplay
+    # For example, add code for a confrontation with "Easy" Andy
+    player_rect = pygame.Rect(WIDTH // 2, HEIGHT - 60, 50, 50)
+    enemy_rect = pygame.Rect(WIDTH // 2 - 100, HEIGHT - 60, 50, 50)
+    clock = pygame.time.Clock()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            player_rect.x -= PLAYER_SPEED
+        if keys[pygame.K_RIGHT]:
+            player_rect.x += PLAYER_SPEED
+        if keys[pygame.K_UP]:
+            player_rect.y -= PLAYER_SPEED
+        if keys[pygame.K_DOWN]:
+            player_rect.y += PLAYER_SPEED
+
+        # Check for successful confrontation or enemy defeat
+        if player_rect.colliderect(enemy_rect):
+            # Mission complete
+            break
+
+        screen.blit(backgrounds['mission_6'], (0, 0))
+        screen.blit(player_sprites[5], player_rect)
+        screen.blit(enemy_sprites[5], enemy_rect)
+        pygame.display.flip()
+        clock.tick(FPS)
+
+    mission_complete_screen()
+
+def mission_7():
+    screen.blit(backgrounds['mission_7'], (0, 0))
+    # Implement detailed mission 7 gameplay
+    # For example, add code for a pawn shop confrontation
+    player_rect = pygame.Rect(WIDTH // 2, HEIGHT - 60, 50, 50)
+    enemy_rect = pygame.Rect(WIDTH // 2 - 100, HEIGHT - 60, 50, 50)
+    clock = pygame.time.Clock()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            player_rect.x -= PLAYER_SPEED
+        if keys[pygame.K_RIGHT]:
+            player_rect.x += PLAYER_SPEED
+        if keys[pygame.K_UP]:
+            player_rect.y -= PLAYER_SPEED
+        if keys[pygame.K_DOWN]:
+            player_rect.y += PLAYER_SPEED
+
+        # Check for successful pawn shop confrontation or enemy defeat
+        if player_rect.colliderect(enemy_rect):
+            # Mission complete
+            break
+
+        screen.blit(backgrounds['mission_7'], (0, 0))
+        screen.blit(player_sprites[6], player_rect)
+        screen.blit(enemy_sprites[6], enemy_rect)
+        pygame.display.flip()
+        clock.tick(FPS)
+
+    mission_complete_screen()
+
+def mission_8():
+    screen.blit(backgrounds['mission_8'], (0, 0))
+    # Implement detailed mission 8 gameplay
+    # For example, add code for rescuing Constance from the brothel
+    player_rect = pygame.Rect(WIDTH // 2, HEIGHT - 60, 50, 50)
+    enemy_rect = pygame.Rect(WIDTH // 2 - 100, HEIGHT - 60, 50, 50)
+    clock = pygame.time.Clock()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            player_rect.x -= PLAYER_SPEED
+        if keys[pygame.K_RIGHT]:
+            player_rect.x += PLAYER_SPEED
+        if keys[pygame.K_UP]:
+            player_rect.y -= PLAYER_SPEED
+        if keys[pygame.K_DOWN]:
+            player_rect.y += PLAYER_SPEED
+
+        # Check for successful rescue or enemy defeat
+        if player_rect.colliderect(enemy_rect):
+            # Mission complete
+            break
+
+        screen.blit(backgrounds['mission_8'], (0, 0))
+        screen.blit(player_sprites[7], player_rect)
+        screen.blit(enemy_sprites[7], enemy_rect)
+        pygame.display.flip()
+        clock.tick(FPS)
+
+    mission_complete_screen()
+
+def mission_9():
+    screen.blit(backgrounds['mission_9'], (0, 0))
+    # Implement detailed mission 9 gameplay
+    # For example, add code for a shootout in the cemetery
+    player_rect = pygame.Rect(WIDTH // 2, HEIGHT - 60, 50, 50)
+    enemy_rect = pygame.Rect(WIDTH // 2 - 100, HEIGHT - 60, 50, 50)
+    clock = pygame.time.Clock()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            player_rect.x -= PLAYER_SPEED
+        if keys[pygame.K_RIGHT]:
+            player_rect.x += PLAYER_SPEED
+        if keys[pygame.K_UP]:
+            player_rect.y -= PLAYER_SPEED
+        if keys[pygame.K_DOWN]:
+            player_rect.y += PLAYER_SPEED
+
+        # Check for successful shootout or enemy defeat
+        if player_rect.colliderect(enemy_rect):
+            # Mission complete
+            break
+
+        screen.blit(backgrounds['mission_9'], (0, 0))
+        screen.blit(player_sprites[8], player_rect)
+        screen.blit(enemy_sprites[8], enemy_rect)
+        pygame.display.flip()
+        clock.tick(FPS)
+
+    mission_complete_screen()
+
+def final_mission():
+    screen.blit(backgrounds['final'], (0, 0))
+    # Implement detailed final mission gameplay
+    # For example, add code for a showdown with "Easy" Andy, Danton, and Palantine
+    player_rect = pygame.Rect(WIDTH // 2, HEIGHT - 60, 50, 50)
+    enemy_rect = pygame.Rect(WIDTH // 2 - 100, HEIGHT - 60, 50, 50)
+    clock = pygame.time.Clock()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            player_rect.x -= PLAYER_SPEED
+        if keys[pygame.K_RIGHT]:
+            player_rect.x += PLAYER_SPEED
+        if keys[pygame.K_UP]:
+            player_rect.y -= PLAYER_SPEED
+        if keys[pygame.K_DOWN]:
+            player_rect.y += PLAYER_SPEED
+
+        # Check for successful final showdown or enemy defeat
+        if player_rect.colliderect(enemy_rect):
+            # Mission complete
+            break
+
+        screen.blit(backgrounds['final'], (0, 0))
+        screen.blit(player_sprites[9], player_rect)
+        screen.blit(enemy_sprites[9], enemy_rect)
+        pygame.display.flip()
+        clock.tick(FPS)
+
+    secret_ending_choice()
+
+def secret_ending_1_screen():
+    screen.fill(BLACK)
+    display_text("Secret Ending 1: Travis Kills Himself", font, WHITE, -50)
+    display_text("Travis has decided to end his life.", font, WHITE, 50)
+    pygame.display.flip()
+    pygame.time.wait(2000)
+
+    screen.fill(BLACK)
+    screen.blit(backgrounds['ending'], (0, 0))
+    screen.blit(player_sprites[0], (WIDTH // 2 - 25, HEIGHT // 2 - 25))
+    pygame.display.flip()
+    pygame.time.wait(5000)
+
+    screen.fill(BLACK)
+    display_text("Game Over", font, WHITE, -50)
+    display_text('"I think I’m gonna have to do something." - Travis Bickle', font, WHITE, 50)
+    pygame.display.flip()
+    pygame.time.wait(5000)
+    pygame.quit()
+    sys.exit()
+
+def secret_ending_2_screen():
+    screen.fill(BLACK)
+    display_text("Secret Ending 2: Back on the Road", font, WHITE, -50)
+    display_text("Travis returns to his taxi, and the world seems shiny and happy.", font, WHITE, 50)
+    pygame.display.flip()
+    pygame.time.wait(2000)
+
+    screen.fill(BLACK)
+    screen.blit(backgrounds['happy'], (0, 0))
+    screen.blit(player_sprites[0], (WIDTH // 2 - 25, HEIGHT // 2 - 25))
+    pygame.display.flip()
+    pygame.time.wait(5000)
+
+    screen.fill(BLACK)
+    display_text("Game Over", font, WHITE, -50)
+    display_text('"I think I’ve finally got things figured out." - Travis Bickle', font, WHITE, 50)
+    pygame.display.flip()
+    pygame.time.wait(5000)
+    pygame.quit()
+    sys.exit()
+
+# Main loop
+def main():
+    global MISSION_COMPLETE
+    current_mission = 1
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+        
+        if MISSION_COMPLETE:
+            if current_mission == 10:
+                final_mission()
+            else:
+                current_mission += 1
+                mission_intro(current_mission)
+                if current_mission == 2:
+                    mission_2()
+                elif current_mission == 3:
+                    mission_3()
+                elif current_mission == 4:
+                    mission_4()
+                elif current_mission == 5:
+                    mission_5()
+                elif current_mission == 6:
+                    mission_6()
+                elif current_mission == 7:
+                    mission_7()
+                elif current_mission == 8:
+                    mission_8()
+                elif current_mission == 9:
+                    mission_9()
+                MISSION_COMPLETE = False
+        else:
+            if current_mission == 10:
+                final_mission()
+        
+        pygame.display.flip()
+        pygame.time.Clock().tick(FPS)
+
+if __name__ == "__main__":
+    main()
